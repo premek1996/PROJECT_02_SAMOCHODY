@@ -11,12 +11,14 @@ import com.app.service.exception.CarServiceException;
 import com.app.service.type.Sort;
 import com.app.service.type.Statistics;
 import org.eclipse.collections.impl.collector.BigDecimalSummaryStatistics;
-import org.eclipse.collections.impl.collector.Collectors2;
 
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
+
+import static java.util.Comparator.*;
+import static java.util.stream.Collectors.*;
+import static org.eclipse.collections.impl.collector.Collectors2.summarizingBigDecimal;
 
 public class CarService {
 
@@ -48,9 +50,9 @@ public class CarService {
             throw new CarServiceException("Sort object is null");
         }
         List<Car> sortedCars = switch (sort) {
-            case COMPONENTS_NUMBER -> cars.stream().sorted(Comparator.comparingInt(Car::getComponentsNumber)).toList();
-            case WHEEL_SIZE -> cars.stream().sorted(Comparator.comparingInt(Car::getWheelSize)).toList();
-            default -> cars.stream().sorted(Comparator.comparingDouble(Car::getEnginePower)).toList();
+            case COMPONENTS_NUMBER -> cars.stream().sorted(comparingInt(Car::getComponentsNumber)).toList();
+            case WHEEL_SIZE -> cars.stream().sorted(comparingInt(Car::getWheelSize)).toList();
+            default -> cars.stream().sorted(comparingDouble(Car::getEnginePower)).toList();
         };
         if (descending) {
             Collections.reverse(sortedCars);
@@ -78,7 +80,7 @@ public class CarService {
     public List<Car> getCarsWithEngineType(EngineType engineType) {
         return cars.stream()
                 .filter(car -> car.hasEngineType(engineType))
-                .sorted(Comparator.comparing(Car::getModel))
+                .sorted(comparing(Car::getModel))
                 .toList();
     }
 
@@ -90,9 +92,9 @@ public class CarService {
      */
     public Map<String, BigDecimal> getStatistics(Statistics statistics) {
         return switch (statistics) {
-            case PRICE -> getStatistics(cars.stream().map(Car::getPrice).collect(Collectors2.summarizingBigDecimal(e -> e)));
-            case ENGINE_POWER -> getStatistics(cars.stream().map(Car::getEnginePower).collect(Collectors.summarizingDouble(e -> e)));
-            default -> getStatistics(cars.stream().map(Car::getMileage).collect(Collectors.summarizingDouble(e -> e)));
+            case PRICE -> getStatistics(cars.stream().map(Car::getPrice).collect(summarizingBigDecimal(e -> e)));
+            case ENGINE_POWER -> getStatistics(cars.stream().map(Car::getEnginePower).collect(summarizingDouble(e -> e)));
+            default -> getStatistics(cars.stream().map(Car::getMileage).collect(summarizingDouble(e -> e)));
         };
     }
 
@@ -120,11 +122,11 @@ public class CarService {
      */
     public Map<Car, Integer> getCarsWithMileages() {
         return cars.stream()
-                .collect(Collectors.toMap(Function.identity(), Car::getMileage))
+                .collect(toMap(Function.identity(), Car::getMileage))
                 .entrySet()
                 .stream()
-                .sorted(Comparator.comparingInt(Map.Entry::getValue))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, Integer::sum, LinkedHashMap::new));
+                .sorted(comparingInt(Map.Entry::getValue))
+                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, Integer::sum, LinkedHashMap::new));
     }
 
     /*
@@ -134,11 +136,11 @@ public class CarService {
      */
     public Map<TyreType, List<Car>> getCarsGroupedByTyreType() {
         return cars.stream()
-                .collect(Collectors.groupingBy(Car::getTyreType))
+                .collect(groupingBy(Car::getTyreType))
                 .entrySet()
                 .stream()
-                .sorted(Comparator.comparingInt(entry -> entry.getValue().size()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (l1, l2) -> l1, LinkedHashMap::new));
+                .sorted(comparingInt(entry -> entry.getValue().size()))
+                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (l1, l2) -> l1, LinkedHashMap::new));
     }
 
     /*
@@ -149,7 +151,7 @@ public class CarService {
     public List<Car> getCarsWhichContainsComponents(List<String> components) {
         return cars.stream()
                 .filter(car -> car.containsComponents(components))
-                .sorted(Comparator.comparing(Car::getModel))
+                .sorted(comparing(Car::getModel))
                 .toList();
     }
 
