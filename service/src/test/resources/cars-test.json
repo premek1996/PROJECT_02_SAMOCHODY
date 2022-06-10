@@ -1,0 +1,66 @@
+[
+  {
+    "model": "AUDI",
+    "price": 120,
+    "mileage": 12000,
+    "engine": {
+      "type": "DIESEL",
+      "power": 220.0
+    },
+    "carBody": {
+      "color": "BLACK",
+      "type": "HATCHBACK",
+      "components": [
+        "ALLOY WHEELS"
+      ]
+    },
+    "wheel": {
+      "type": "SUMMER",
+      "model": "PIRELLI",
+      "size": 18
+    }
+  },
+  {
+    "model": "BMW",
+    "price": 170,
+    "mileage": 13000,
+    "engine": {
+      "type": "GASOLINE",
+      "power": 240.0
+    },
+    "carBody": {
+      "color": "SILVER",
+      "type": "SEDAN",
+      "components": [
+        "ABS"
+      ]
+    },
+    "wheel": {
+      "type": "WINTER",
+      "model": "PIRELLI",
+      "size": 28
+    }
+  },
+  {
+    "model": "MAZDA",
+    "price": 140,
+    "mileage": 15000,
+    "engine": {
+      "type": "GASOLINE",
+      "power": 200.0
+    },
+    "carBody": {
+      "color": "SILVER",
+      "type": "SEDAN",
+      "components": [
+        "BLUETOOTH"
+      ]
+    },
+    "wheel": {
+      "type": "SUMMER",
+      "model": "PIRELLI",
+      "size": 22
+    }
+  }
+]
+

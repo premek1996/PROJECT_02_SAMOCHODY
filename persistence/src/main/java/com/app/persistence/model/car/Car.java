@@ -4,9 +4,11 @@ import com.app.persistence.model.carbody.CarBody;
 import com.app.persistence.model.carbody.CarBodyType;
 import com.app.persistence.model.engine.Engine;
 import com.app.persistence.model.engine.EngineType;
+import com.app.persistence.model.exception.CarModelException;
 import com.app.persistence.model.wheel.TyreType;
 import com.app.persistence.model.wheel.Wheel;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -16,6 +18,7 @@ import java.util.List;
 @Getter
 @ToString
 @Builder
+@EqualsAndHashCode
 public class Car {
 
     private final String model;
@@ -42,6 +45,15 @@ public class Car {
     }
 
     public boolean hasPriceInRange(BigDecimal minPrice, BigDecimal maxPrice) {
+        if (minPrice == null || maxPrice == null) {
+            throw new CarModelException("BigDecimal object is null");
+        }
+        if (minPrice.compareTo(BigDecimal.ZERO) < 0 || maxPrice.compareTo(BigDecimal.ZERO) < 0) {
+            throw new CarModelException("Given price must be positive");
+        }
+        if (minPrice.compareTo(maxPrice) > 0) {
+            throw new CarModelException("minPrice cannot be greater than maxPrice");
+        }
         return minPrice.compareTo(price) <= 0 && maxPrice.compareTo(price) >= 0;
     }
 
